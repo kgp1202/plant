@@ -87,7 +87,6 @@ public class Login_Activity extends Activity implements View.OnClickListener{
             }
         });
         */
-
         callback = new SessionCallback();                  // 이 두개의 함수 중요함
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().checkAndImplicitOpen();

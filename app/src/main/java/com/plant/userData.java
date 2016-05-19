@@ -24,8 +24,8 @@ public class userData {
     public int point;
     public String name;
     public String profilePath;
-    Gson makeString=new Gson();;
     public JSONObject getUserDataJson(){
+        Gson makeString=new Gson();
         JSONObject returnV=null;
         try {
             returnV=new JSONObject(makeString.toJson(this));
@@ -35,6 +35,7 @@ public class userData {
         return returnV;
     }
     public String getUserDataJSONString(){
+        Gson makeString=new Gson();
         return makeString.toJson(this);
     }
     public void setUserDataFromJson(JSONObject input){
