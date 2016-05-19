@@ -32,5 +32,5 @@ dependencies {
     compile group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     compile 'com.mcxiaoke.volley:library:1.0.8'
     compile group: 'com.kakao.sdk', name: 'kakaotalk', version: project.KAKAO_SDK_VERSION
-
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
