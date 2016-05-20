@@ -15,7 +15,6 @@ import android.widget.TextView;
 public class StatusBar extends FrameLayout {
 
     ImageView statusbar_home_btn,statusbar_realtime_btn, statusbar_conserve_btn, statusbar_conserve_confirm_btn, statusbar_more_btn;
-
     public StatusBar(Context context) {
         super(context);
     }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
@@ -85,10 +88,13 @@ public class Login_Activity extends Activity implements View.OnClickListener{
 
         btnTw.setOnClickListener(this);
         btnFb.setOnClickListener(this);
-        btnKko.setOnClickListener(this);
 
         anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
         anim2 = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9e146eb55825e1ccf107b147887d38abcdbd3d2d
     }
 
     /************* KAKAO extend class  and function *************/
@@ -112,8 +118,29 @@ public class Login_Activity extends Activity implements View.OnClickListener{
         finish();
     }
     public void kakaoInit(){
+        /*
+        UserManagement.requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+                Log.d("test","logout success");
+            }
+        });
+        */
         callback = new SessionCallback();                  // 이 두개의 함수 중요함
         Session.getCurrentSession().addCallback(callback);
+        Session.getCurrentSession().checkAndImplicitOpen();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(callback);
     }
     /************* KAKAO Class & Function END *************/
 }

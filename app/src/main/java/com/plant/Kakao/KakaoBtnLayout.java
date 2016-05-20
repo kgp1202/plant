@@ -135,7 +135,6 @@ public class KakaoBtnLayout extends FrameLayout {
                         if (authType != null) {
                             Session.getCurrentSession().open(authType, (Activity) getContext());
                         }
-
                         dialog.dismiss();
                     }
                 }).create().show();

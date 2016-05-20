@@ -1,8 +1,10 @@
 package com.plant.Kakao;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
@@ -10,15 +12,22 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
+import com.plant.IndexActivity;
+import com.plant.userData;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by angks on 2016-05-17.
  */
 public class KakaoSignUp extends Activity {
+    com.plant.userData userData;
+    Context myContext;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("test","KakaoSignUpStart");
         requestMe();
+        myContext=this;
     }
     protected void requestMe() { //유저의 정보를 받아오는 함수
         UserManagement.requestMe(new MeResponseCallback() {
@@ -46,22 +55,33 @@ public class KakaoSignUp extends Activity {
             @Override
             public void onSuccess(UserProfile userProfile) {  //성공 시 userProfile 형태로 반환
                 //여기서 user 데이터를 자기가 원하는 모양으로 입력
-                Logger.d("UserProfile : " + userProfile);
-                redirectMainActivity(); // 로그인 성공시 MainActivity로
+                String kakaoID = String.valueOf(userProfile.getId()); // userProfile에서 ID값을 가져옴
+                String kakaoNickname = userProfile.getNickname();     // Nickname 값을 가져옴
+                Log.d("test","onSuccess Login");
+                userData=new userData();
+                userData.loginFrom= com.plant.userData.KAKAO;
+                userData.name=userProfile.getNickname();
+                userData.profilePath=userProfile.getProfileImagePath();
+                userData.ID=userProfile.getId();
+                Log.d("test",":"+userData.getUserDataJson());
+                redirectMainActivity(userData); // 로그인 성공시 MainActivity로
             }
         });
     }
 
-    private void redirectMainActivity() {
+    private void redirectMainActivity(userData input) {
         /**
          *
          * 로그인 성공시 여기를 바꿔 줘야됨
          *
          * */
-        startActivity(new Intent(this, com.plant.Login_Activity.class));
+        Intent intent=new Intent(this, IndexActivity.class);
+        intent.putExtra("USERDATA",input.getUserDataJSONString());
+        startActivity(intent);
         finish();
     }
     protected void redirectLoginActivity() {
+        Log.d("test","session close or anything");
         final Intent intent = new Intent(this, com.plant.Login_Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);

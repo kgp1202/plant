@@ -21,15 +21,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".IndexActivity" />
-        <activity
-            android:name=".Login_Activity"
-            android:theme="@style/LoginTheme" />
-
+        <activity android:name=".Login_Activity" android:theme="@style/LoginTheme" />
+        <activity android:name=".Kakao.KakaoSignUp"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="392e9c6babcd511311d8dd6f5b36ece5" />
-
-        <activity android:name=".StatusBarActivity"></activity>
+            android:value="@string/key" />
     </application>
 
 </manifest>
