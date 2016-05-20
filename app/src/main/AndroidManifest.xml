@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.plant">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".Kakao.GlobalApplication"
         android:allowBackup="true"
@@ -19,14 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IndexActivity"></activity>
-        <activity
-            android:theme="@style/LoginTheme"
-            android:name=".Login_Activity"
-            ></activity>
-        <activity
-            android:name=".Kakao.KakaoSignUp"
-            ></activity>
+        <activity android:name=".IndexActivity" />
+        <activity android:name=".Login_Activity" android:theme="@style/LoginTheme" />
+        <activity android:name=".Kakao.KakaoSignUp"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/key" />

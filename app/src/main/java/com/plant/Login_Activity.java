@@ -1,5 +1,6 @@
 package com.plant;
 
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -24,7 +26,8 @@ public class Login_Activity extends Activity implements View.OnClickListener{
     ImageView btnFb;
     com.plant.Kakao.KakaoBtnLayout btnKko;
     /************* activity *************/
-
+    Animation anim1;
+    Animation anim2;
     /************* activity *************/
     private SessionCallback callback;
 
@@ -36,19 +39,48 @@ public class Login_Activity extends Activity implements View.OnClickListener{
         init(); //actvity init
         kakaoInit();//kakao Init;
     }
+
     @Override
-    public void onClick(View v) {
-        Animation anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
-        Animation anim2=AnimationUtils.loadAnimation(this,R.anim.scale_up);
+    public void onClick(final View v) {
+        anim1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.startAnimation(anim2);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        anim2.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                switch(v.getId()){
+                    case R.id.btnFB:
+                    startActivity(new Intent(getApplicationContext(), IndexActivity.class));
+                        break;
+                    case R.id.btnKKO:
+                        break;
+                    case R.id.btnTW:
+                        break;
+                }
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
         v.startAnimation(anim1);
-        v.startAnimation(anim2);
-        switch (v.getId()){
-            case R.id.btnFB:
-                break;
-            case R.id.btnKKO:
-                break;
-        }
     }
+
     public void init(){
         btnTw=(ImageView)findViewById(R.id.btnTW);
         btnFb=(ImageView)findViewById(R.id.btnFB);
@@ -56,6 +88,10 @@ public class Login_Activity extends Activity implements View.OnClickListener{
 
         btnTw.setOnClickListener(this);
         btnFb.setOnClickListener(this);
+
+        anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
+        anim2 = AnimationUtils.loadAnimation(this,R.anim.scale_up);
+
     }
 
     /************* KAKAO extend class  and function *************/
@@ -70,7 +106,7 @@ public class Login_Activity extends Activity implements View.OnClickListener{
                 Logger.e(exception);
             }
             setContentView(R.layout.activity_login_); // 세션 연결이 실패했을때
-        }                                            // 로그인화면을 다시 불러옴
+        }                                              // 로그인화면을 다시 불러옴
     }
     protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
         final Intent intent = new Intent(this, com.plant.Kakao.KakaoSignUp.class);
