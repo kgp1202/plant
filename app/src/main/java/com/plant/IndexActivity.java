@@ -19,6 +19,7 @@ public class IndexActivity extends Activity implements View.OnClickListener, Vie
     ImageView index_realtime_btn;
     ImageView index_conserve_btn;
     ImageView index_conserve_confirm_btn;
+
     Animation size_down_anim;
 
     @Override
@@ -37,6 +38,7 @@ public class IndexActivity extends Activity implements View.OnClickListener, Vie
         index_conserve_btn.setOnClickListener(this);
         index_conserve_confirm_btn.setOnClickListener(this);
 
+        size_down_anim = AnimationUtils.loadAnimation(this, R.anim.scale_down);
     }
 
     @Override
@@ -53,8 +55,10 @@ public class IndexActivity extends Activity implements View.OnClickListener, Vie
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        v.startAnimation(size_down_anim);
+        if(event.getAction() == MotionEvent.ACTION_BUTTON_PRESS){
+            Toast.makeText(getApplicationContext(), " " + v.getId(), Toast.LENGTH_SHORT).show();
+        }
 
-        return false;
+        return onTouchEvent(event);
     }
 }

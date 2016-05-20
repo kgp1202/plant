@@ -89,8 +89,6 @@ public class Login_Activity extends Activity implements View.OnClickListener{
 
         anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
         anim2 = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-
-
     }
 
     /************* KAKAO extend class  and function *************/
