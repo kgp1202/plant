@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.plant">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".Kakao.GlobalApplication"
         android:allowBackup="true"
@@ -19,13 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IndexActivity"></activity>
+        <activity android:name=".IndexActivity" />
         <activity
-            android:theme="@style/LoginTheme"
             android:name=".Login_Activity"
-            ></activity>
-        <meta-data android:name="com.kakao.sdk.AppKey"
+            android:theme="@style/LoginTheme" />
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
             android:value="392e9c6babcd511311d8dd6f5b36ece5" />
+
+        <activity android:name=".StatusBarActivity"></activity>
     </application>
 
 </manifest>
