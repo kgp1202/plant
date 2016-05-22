@@ -66,7 +66,9 @@ public class Login_Activity extends Activity implements View.OnClickListener{
             public void onAnimationEnd(Animation animation) {
                 switch(v.getId()){
                     case R.id.btnFB:
-                    startActivity(new Intent(getApplicationContext(), IndexActivity.class));
+                        Intent intent=new Intent(Login_Activity.this,FrameActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     case R.id.btnKKO:
                         break;

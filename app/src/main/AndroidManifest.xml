@@ -20,12 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IndexActivity" />
-        <activity android:name=".Login_Activity" android:theme="@style/LoginTheme" />
-        <activity android:name=".Kakao.KakaoSignUp"/>
+        <activity
+            android:name=".Login_Activity"
+            android:theme="@style/LoginTheme" />
+        <activity android:name=".Kakao.KakaoSignUp" />
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/key" />
+
+        <activity android:name=".FrameActivity"></activity>
     </application>
 
 </manifest>
