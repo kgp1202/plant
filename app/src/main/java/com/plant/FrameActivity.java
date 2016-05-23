@@ -1,73 +1,132 @@
 package com.plant;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-/**
- * Created by Kim on 2016-05-22.
- */
+public class FrameActivity extends FragmentActivity implements View.OnClickListener{
 
-public class IndexFragment extends Fragment implements View.OnTouchListener{
-    ImageView index_realtime_btn;
-    ImageView index_conserve_btn;
-    ImageView index_conserve_confirm_btn;
-    Animation scale_touch_anim;
-    View touched_view;
+    ImageView statusbar_home_btn;
+    ImageView statusbar_realtime_btn;
+    ImageView statusbar_conserve_btn;
+    ImageView statusbar_conserve_confirm_btn;
+    ImageView statusbar_more_btn;
 
-    public IndexFragment(){}
+    int fragmentNum;
+    IndexFragment indexFragment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragement_index, container, false);
-        init(rootView);
-        return rootView;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_frame);
+
+        init();
     }
 
-    public void init(View v){
-        index_realtime_btn = (ImageView) v.findViewById(R.id.index_realtime_btn);
-        index_conserve_btn = (ImageView) v.findViewById(R.id.index_conserve_btn);
-        index_conserve_confirm_btn = (ImageView) v.findViewById(R.id.index_conserve_confirm_btn);
+    public void init(){
+        statusbar_home_btn = (ImageView) findViewById(R.id.statusbar_home_btn);
+        statusbar_realtime_btn = (ImageView) findViewById(R.id.statusbar_realtime_btn);
+        statusbar_conserve_btn = (ImageView) findViewById(R.id.statusbar_conserve_btn);
+        statusbar_conserve_confirm_btn = (ImageView) findViewById(R.id.statusbar_conserve_confirm_btn);
+        statusbar_more_btn = (ImageView) findViewById(R.id.statusbar_more_btn);
 
-        index_realtime_btn.setOnTouchListener(this);
-        index_conserve_btn.setOnTouchListener(this);
-        index_conserve_confirm_btn.setOnTouchListener(this);
+        statusbar_home_btn.setOnClickListener(this);
+        statusbar_realtime_btn.setOnClickListener(this);
+        statusbar_conserve_btn.setOnClickListener(this);
+        statusbar_conserve_confirm_btn.setOnClickListener(this);
+        statusbar_more_btn.setOnClickListener(this);
 
-        scale_touch_anim = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_touch);
+        fragmentNum = 1;
+        indexFragment = new IndexFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentReplace, indexFragment)
+                .commit();
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Log.d("aaa", "aa");
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            touched_view = v;
-            v.startAnimation(scale_touch_anim);
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP){
-            touched_view.clearAnimation();
-            switch(touched_view.getId()){
-                case R.id.index_realtime_btn:
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.statusbar_home_btn:
+                if(fragmentNum == 1) {
 
-                    Toast.makeText(getActivity(), "Realtime", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.index_conserve_btn:
-                    Toast.makeText(getActivity(), "Conserve", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.index_conserve_confirm_btn:
-                    Toast.makeText(getActivity(), "Conserve_confirm", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
+                }
+                initImage();
+                statusbar_home_btn.setImageResource(R.drawable.statusbar_home_clicked_btn);
+                fragmentNum = 1;
+                if(indexFragment == null)
+                    indexFragment = new IndexFragment();
 
-        return false;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, indexFragment)
+                        .commit();
+
+                break;
+            case R.id.statusbar_realtime_btn:
+                if(fragmentNum == 2) {
+
+                    break;
+                }
+                initImage();
+                statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_clicked_btn);
+                fragmentNum = 2;
+                Toast.makeText(this,"realTime", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.statusbar_conserve_btn:
+                if(fragmentNum == 3) {
+
+                    break;
+                }
+                initImage();
+                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                fragmentNum = 3;
+                Toast.makeText(this,"conserve", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.statusbar_conserve_confirm_btn:
+                if(fragmentNum == 4) {
+
+                    break;
+                }
+                initImage();
+                statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_clicked_btn);
+                fragmentNum = 4;
+                Toast.makeText(this,"conserve_confirm", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.statusbar_more_btn:
+                if(fragmentNum == 5) {
+
+                    break;
+                }
+                initImage();
+                statusbar_more_btn.setImageResource(R.drawable.statusbar_more_clicked_btn);
+                fragmentNum = 5;
+                Toast.makeText(this,"more", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    //클릭 되어졌던 이미지를 초기화
+    public void initImage(){
+        switch(fragmentNum){
+            case 1:statusbar_home_btn.setImageResource(R.drawable.statusbar_home_btn);
+                break;
+            case 2:statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_btn);
+                break;
+            case 3:statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_btn);
+                break;
+            case 4:statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_btn);
+                break;
+            case 5:statusbar_more_btn.setImageResource(R.drawable.statusbar_more_btn);
+                break;
+        }
     }
 }
