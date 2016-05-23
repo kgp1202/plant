@@ -147,6 +147,7 @@
         android:background="#ffffff"
         >
         <ImageView
+            android:id="@+id/realtimeJuanBtn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -157,6 +158,7 @@
             android:layout_height="fill_parent"
             android:background="#dddddd" />
         <ImageView
+            android:id="@+id/realtimeSchoolBtn"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -174,7 +176,7 @@
         android:background="#ffffff"
         >
         <ImageView
-            android:id="@+id/RealTimeSendBtn"
+            android:id="@+id/realtimeSendBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/matching_sendbtn"
