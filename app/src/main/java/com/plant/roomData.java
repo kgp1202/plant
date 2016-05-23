@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by angks on 2016-05-13.
@@ -22,6 +23,19 @@ public class roomData {
     public long roomStartTime;//출발 날짜
     public int roomObject;//목적
     public String content;
+    public roomData(){
+        ID=0;
+        durationTime=0;
+        userNum=0;
+        maxUser=0;
+        startingPoint=0;
+        destPoint=0;
+        round=false;
+        roomObject=0;
+        userID=new ArrayList<Integer>();
+        roomStartTime= Calendar.getInstance().getTimeInMillis();
+        content="";
+    }
     public JSONObject getRoomDataJson(){
         Gson makeJson=new Gson();
         JSONObject returnV=null;

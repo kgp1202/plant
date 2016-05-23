@@ -23,7 +23,6 @@ public class RealTimeFragment extends Fragment {
     ImageView schoolBtn;
     ImageView sendBtn;
     View mainView;
-
     /**************************************/
 
 
@@ -76,7 +75,7 @@ public class RealTimeFragment extends Fragment {
     }
     /**************************************/
 
-     /*Listener*****************************/
+    /*function*****************************/
     public void makeUnableMaxNumImages(int input) {
         switch (input) {
             case 2:
@@ -88,6 +87,25 @@ public class RealTimeFragment extends Fragment {
                 break;
         }
     }
+    public boolean checkValidation(){
+        if(realTimeRommData.destPoint==0 || realTimeRommData.maxUser==0 || realTimeRommData.userNum==0 || realTimeRommData.startingPoint==0)
+            return false;
+        return true;
+    }
+    /**************************************/
+
+     /*Listener*****************************/
+    View.OnClickListener SendBtnListener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(checkValidation()){
+
+            }
+            else{
+
+            }
+        }
+    };
     View.OnClickListener DestOnClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
