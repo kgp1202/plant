@@ -66,7 +66,7 @@ public class Login_Activity extends Activity implements View.OnClickListener{
             public void onAnimationEnd(Animation animation) {
                 switch(v.getId()){
                     case R.id.btnFB:
-                    startActivity(new Intent(getApplicationContext(), IndexActivity.class));
+                    startActivity(new Intent(getApplicationContext(), FrameActivity.class));
                         break;
                     case R.id.btnKKO:
                         break;
@@ -91,10 +91,6 @@ public class Login_Activity extends Activity implements View.OnClickListener{
 
         anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
         anim2 = AnimationUtils.loadAnimation(this,R.anim.scale_up);
-<<<<<<< HEAD
-=======
-
->>>>>>> 9e146eb55825e1ccf107b147887d38abcdbd3d2d
     }
 
     /************* KAKAO extend class  and function *************/

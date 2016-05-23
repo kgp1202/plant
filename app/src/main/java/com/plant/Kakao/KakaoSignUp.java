@@ -12,9 +12,8 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
-import com.plant.IndexActivity;
+import com.plant.FrameActivity;
 import com.plant.userData;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by angks on 2016-05-17.
@@ -75,7 +74,7 @@ public class KakaoSignUp extends Activity {
          * 로그인 성공시 여기를 바꿔 줘야됨
          *
          * */
-        Intent intent=new Intent(this, IndexActivity.class);
+        Intent intent=new Intent(this, FrameActivity.class);
         intent.putExtra("USERDATA",input.getUserDataJSONString());
         startActivity(intent);
         finish();
