@@ -1,17 +1,24 @@
 package com.plant;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 /**
  * Created by angks on 2016-05-22.
  */
-public class RealTimeFragment extends Fragment {
+public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     /*data*********************************/
     public roomData realTimeRommData;
     /**************************************/
@@ -23,10 +30,18 @@ public class RealTimeFragment extends Fragment {
     ImageView schoolBtn;
     ImageView sendBtn;
     View mainView;
+    Context myContext;
+
     /**************************************/
 
 
     /*init*********************************/
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_realtime, container, false);
@@ -34,6 +49,7 @@ public class RealTimeFragment extends Fragment {
         for (int i = 0; i <= 3; i++) initData(i);
         return mainView;
     }
+
     public void initInstance() {
         (withNumImages[0] = (ImageView) mainView.findViewById(R.id.realTimeMatchingWith1)).setOnClickListener(withNumOnClickListener);
         (withNumImages[1] = (ImageView) mainView.findViewById(R.id.realTimeMatchingWith2)).setOnClickListener(withNumOnClickListener);
@@ -45,8 +61,9 @@ public class RealTimeFragment extends Fragment {
 
         (juanBtn = (ImageView) mainView.findViewById(R.id.realtimeJuanBtn)).setOnClickListener(DestOnClickListener);
         (schoolBtn = (ImageView) mainView.findViewById(R.id.realtimeSchoolBtn)).setOnClickListener(DestOnClickListener);
-        sendBtn = (ImageView) mainView.findViewById(R.id.realtimeSendBtn);
+        (sendBtn = (ImageView) mainView.findViewById(R.id.realtimeSendBtn)).setOnTouchListener(this);
     }
+
     public void initData(int caseNum) {
         int i;
         switch (caseNum) {
@@ -73,6 +90,7 @@ public class RealTimeFragment extends Fragment {
                 break;
         }
     }
+
     /**************************************/
 
     /*function*****************************/
@@ -80,53 +98,82 @@ public class RealTimeFragment extends Fragment {
         switch (input) {
             case 2:
                 maxNumImages[1].setImageResource(R.drawable.realtime_max_2_u);
-                maxNumImages[1].setTag( 1);
+                maxNumImages[1].setTag(1);
             case 1:
                 maxNumImages[0].setImageResource(R.drawable.realtime_max_1_u);
-                maxNumImages[0].setTag( 1);
+                maxNumImages[0].setTag(1);
                 break;
         }
     }
-    public boolean checkValidation(){
-        if(realTimeRommData.destPoint==0 || realTimeRommData.maxUser==0 || realTimeRommData.userNum==0 || realTimeRommData.startingPoint==0)
+
+    public boolean checkValidation() {
+        if (realTimeRommData.destPoint == 0 || realTimeRommData.maxUser == 0 || realTimeRommData.userNum == 0 || realTimeRommData.startingPoint == 0)
             return false;
         return true;
     }
+
     /**************************************/
 
      /*Listener*****************************/
-    View.OnClickListener SendBtnListener=new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if(checkValidation()){
-
-            }
-            else{
-
-            }
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+        if (checkValidation()) {
+            String dest = "";
+            if (realTimeRommData.destPoint == 1) dest = "주안으로";
+            else if (realTimeRommData.destPoint == 2) dest = "학교로";
+            builder.setTitle("확인!")
+                    .setMessage(realTimeRommData.userNum + "명이서 " + realTimeRommData.maxUser + "명과 함께 택시를 타고 " + dest + " 가는 것 맞나요?")
+                    .setCancelable(true)
+                    .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setNegativeButton("아뇨", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+        } else {
+            builder.setTitle("확인")
+                    .setMessage("부족한 정보를 입력해 주세요!")
+                    .setCancelable(true)
+                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
         }
-    };
-    View.OnClickListener DestOnClickListener=new View.OnClickListener() {
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        return false;
+    }
+
+    View.OnClickListener DestOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            boolean get=(boolean)v.getTag();
-            switch (v.getId()){
+            boolean get = (boolean) v.getTag();
+            switch (v.getId()) {
                 case R.id.realtimeJuanBtn:
-                    if(!get){
+                    if (!get) {
                         initData(3);
                         juanBtn.setImageResource(R.drawable.realtime_juan_btn_s);
                         juanBtn.setTag(true);
-                        realTimeRommData.destPoint=1;//????????
-                        realTimeRommData.startingPoint=2;
+                        realTimeRommData.destPoint = 1;//????????
+                        realTimeRommData.startingPoint = 2;
                     }
                     break;
                 case R.id.realtimeSchoolBtn:
-                    if(!get){
+                    if (!get) {
                         initData(3);
                         schoolBtn.setImageResource(R.drawable.realtime_school_btn_s);
                         schoolBtn.setTag(true);
-                        realTimeRommData.destPoint=2;//????????
-                        realTimeRommData.startingPoint=1;
+                        realTimeRommData.destPoint = 2;//????????
+                        realTimeRommData.startingPoint = 1;
                     }
                     break;
             }
@@ -145,6 +192,7 @@ public class RealTimeFragment extends Fragment {
                         v.setTag(true);
                         withNumImages[0].setImageResource(R.drawable.matching_with1_s);
                         realTimeRommData.userNum = 1;
+                        realTimeRommData.maxUser=0;
                     }
                     break;
                 case R.id.realTimeMatchingWith2:
@@ -156,6 +204,7 @@ public class RealTimeFragment extends Fragment {
                         withNumImages[1].setImageResource(R.drawable.matching_with2_s);
                         makeUnableMaxNumImages(1);
                         realTimeRommData.userNum = 2;
+                        realTimeRommData.maxUser=0;
                     }
                     break;
                 case R.id.realTimeMatchingWith3:
@@ -163,10 +212,11 @@ public class RealTimeFragment extends Fragment {
                     else {
                         initData(1);
                         initData(2);
-                        v.setTag( true);
+                        v.setTag(true);
                         withNumImages[2].setImageResource(R.drawable.matching_with3_s);
                         makeUnableMaxNumImages(2);
                         realTimeRommData.userNum = 3;
+                        realTimeRommData.maxUser=0;
                     }
                     break;
             }
@@ -182,7 +232,7 @@ public class RealTimeFragment extends Fragment {
                         initData(2);
                         maxNumImages[0].setImageResource(R.drawable.realtime_max_1_s);
                         maxNumImages[0].setTag(2);
-                        realTimeRommData.maxUser=2;
+                        realTimeRommData.maxUser = 2;
                     }
                     break;
                 case R.id.realTimeMax2:
@@ -197,21 +247,21 @@ public class RealTimeFragment extends Fragment {
                         }
                         maxNumImages[1].setImageResource(R.drawable.realtime_max_2_s);
                         maxNumImages[1].setTag(2);
-                        realTimeRommData.maxUser=3;
+                        realTimeRommData.maxUser = 3;
                     }
                     break;
                 case R.id.realTimeMax3:
-                        if (((int) maxNumImages[0].getTag()) == 2) {
-                            maxNumImages[0].setImageResource(R.drawable.realtime_max_1);
-                            maxNumImages[0].setTag(0);
-                        }
-                        if (((int) maxNumImages[1].getTag()) == 2) {
-                            maxNumImages[1].setImageResource(R.drawable.realtime_max_2);
-                            maxNumImages[1].setTag(0);
-                        }
-                        maxNumImages[2].setImageResource(R.drawable.realtime_max_3_s);
-                        maxNumImages[2].setTag(2);
-                        realTimeRommData.maxUser=4;
+                    if (((int) maxNumImages[0].getTag()) == 2) {
+                        maxNumImages[0].setImageResource(R.drawable.realtime_max_1);
+                        maxNumImages[0].setTag(0);
+                    }
+                    if (((int) maxNumImages[1].getTag()) == 2) {
+                        maxNumImages[1].setImageResource(R.drawable.realtime_max_2);
+                        maxNumImages[1].setTag(0);
+                    }
+                    maxNumImages[2].setImageResource(R.drawable.realtime_max_3_s);
+                    maxNumImages[2].setTag(2);
+                    realTimeRommData.maxUser = 4;
                     break;
             }
         }

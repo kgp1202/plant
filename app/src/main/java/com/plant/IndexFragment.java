@@ -79,7 +79,6 @@ public class IndexFragment extends Fragment implements View.OnTouchListener{
                     break;
             }
         }
-
         return false;
     }
 }
