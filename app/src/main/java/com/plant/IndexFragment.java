@@ -1,5 +1,7 @@
 package com.plant;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,14 +20,26 @@ import android.widget.Toast;
 */
 
 public class IndexFragment extends Fragment implements View.OnTouchListener{
+
+    /*view*******************************************/
     ImageView index_realtime_btn;
     ImageView index_conserve_btn;
     ImageView index_conserve_confirm_btn;
     Animation scale_touch_anim;
     View touched_view;
+    /************************************************/
+
+    /*functional************************************/
+    FragmentChangeListener mCallback;
+    /**********************************************/
 
     public IndexFragment(){}
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mCallback=(FragmentChangeListener)context;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragement_index, container, false);
@@ -47,7 +61,6 @@ public class IndexFragment extends Fragment implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.d("aaa", "aa");
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             touched_view = v;
             v.startAnimation(scale_touch_anim);
@@ -56,14 +69,13 @@ public class IndexFragment extends Fragment implements View.OnTouchListener{
             touched_view.clearAnimation();
             switch(touched_view.getId()){
                 case R.id.index_realtime_btn:
-
-                    Toast.makeText(getActivity(), "Realtime", Toast.LENGTH_SHORT).show();
+                    mCallback.makeChange(1);
                     break;
                 case R.id.index_conserve_btn:
-                    Toast.makeText(getActivity(), "Conserve", Toast.LENGTH_SHORT).show();
+                    mCallback.makeChange(2);
                     break;
                 case R.id.index_conserve_confirm_btn:
-                    Toast.makeText(getActivity(), "Conserve_confirm", Toast.LENGTH_SHORT).show();
+                    mCallback.makeChange(3);
                     break;
             }
         }

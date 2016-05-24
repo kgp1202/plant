@@ -13,25 +13,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class FrameActivity extends FragmentActivity implements View.OnClickListener{
-
+public class FrameActivity extends FragmentActivity implements View.OnClickListener,FragmentChangeListener{
+    /* view ****************************************/
     ImageView statusbar_home_btn;
     ImageView statusbar_realtime_btn;
     ImageView statusbar_conserve_btn;
     ImageView statusbar_conserve_confirm_btn;
     ImageView statusbar_more_btn;
-
-    int fragmentNum;
-    IndexFragment indexFragment;
+    /************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frame);
-
         init();
     }
 
+
+
+
+
+
+    /**init method******************************************************************************************/
     public void init(){
         statusbar_home_btn = (ImageView) findViewById(R.id.statusbar_home_btn);
         statusbar_realtime_btn = (ImageView) findViewById(R.id.statusbar_realtime_btn);
@@ -45,88 +48,76 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
         statusbar_conserve_confirm_btn.setOnClickListener(this);
         statusbar_more_btn.setOnClickListener(this);
 
-        fragmentNum = 1;
-        indexFragment = new IndexFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentReplace, indexFragment)
+                .replace(R.id.fragmentReplace, new IndexFragment())
                 .commit();
     }
-
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.statusbar_home_btn:
-                if(fragmentNum == 1) {
-
-                    break;
-                }
-                initImage();
-                statusbar_home_btn.setImageResource(R.drawable.statusbar_home_clicked_btn);
-                fragmentNum = 1;
-                if(indexFragment == null)
-                    indexFragment = new IndexFragment();
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentReplace, indexFragment)
-                        .commit();
-
-                break;
-            case R.id.statusbar_realtime_btn:
-                if(fragmentNum == 2) {
-
-                    break;
-                }
-                initImage();
-                statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_clicked_btn);
-                fragmentNum = 2;
-                Toast.makeText(this,"realTime", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.statusbar_conserve_btn:
-                if(fragmentNum == 3) {
-
-                    break;
-                }
-                initImage();
-                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
-                fragmentNum = 3;
-                Toast.makeText(this,"conserve", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.statusbar_conserve_confirm_btn:
-                if(fragmentNum == 4) {
-
-                    break;
-                }
-                initImage();
-                statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_clicked_btn);
-                fragmentNum = 4;
-                Toast.makeText(this,"conserve_confirm", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.statusbar_more_btn:
-                if(fragmentNum == 5) {
-
-                    break;
-                }
-                initImage();
-                statusbar_more_btn.setImageResource(R.drawable.statusbar_more_clicked_btn);
-                fragmentNum = 5;
-                Toast.makeText(this,"more", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
     //클릭 되어졌던 이미지를 초기화
     public void initImage(){
-        switch(fragmentNum){
-            case 1:statusbar_home_btn.setImageResource(R.drawable.statusbar_home_btn);
+        statusbar_home_btn.setImageResource(R.drawable.statusbar_home_btn);
+        statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_btn);
+        statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_btn);
+        statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_btn);
+        statusbar_more_btn.setImageResource(R.drawable.statusbar_more_btn);
+    }
+    /************************************************************************************************/
+
+    /**Override from implements******************************************************************************************/
+    @Override
+    public void onClick(View v) {
+        initImage();
+        switch(v.getId()){
+            case R.id.statusbar_home_btn:
+                statusbar_home_btn.setImageResource(R.drawable.statusbar_home_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new IndexFragment())
+                        .commit();
                 break;
-            case 2:statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_btn);
+            case R.id.statusbar_realtime_btn:
+                statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new RealTimeFragment())
+                        .commit();
                 break;
-            case 3:statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_btn);
+            case R.id.statusbar_conserve_btn:
+                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationFragment())
+                        .commit();
                 break;
-            case 4:statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_btn);
+            case R.id.statusbar_conserve_confirm_btn:
+                statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationCheckFragment())
+                        .commit();
                 break;
-            case 5:statusbar_more_btn.setImageResource(R.drawable.statusbar_more_btn);
+            case R.id.statusbar_more_btn:
                 break;
         }
     }
+    @Override
+    public void makeChange(int number) {
+        initImage();
+        switch(number){
+            case 1:
+                statusbar_realtime_btn.setImageResource(R.drawable.statusbar_realtime_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new RealTimeFragment())
+                        .commit();
+                break;
+            case 2:
+                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationFragment())
+                        .commit();
+                break;
+            case 3:
+                statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationCheckFragment())
+                        .commit();
+                break;
+        }
+    }
+    /************************************************************************************************/
 }
