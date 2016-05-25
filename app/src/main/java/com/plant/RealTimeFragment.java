@@ -3,8 +3,12 @@ package com.plant;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +18,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by angks on 2016-05-22.
  */
 public class RealTimeFragment extends Fragment implements View.OnTouchListener {
-    /*data*********************************/
+    /*another*********************************/
     public roomData realTimeRommData;
+    ActivityMakeDarker mCallBack;
+    public boolean isQueuing = false;
     /**************************************/
 
     /*View*********************************/
@@ -40,6 +47,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         myContext = context;
+        mCallBack = (ActivityMakeDarker) context;
     }
 
     @Override
@@ -62,6 +70,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
         (juanBtn = (ImageView) mainView.findViewById(R.id.realtimeJuanBtn)).setOnClickListener(DestOnClickListener);
         (schoolBtn = (ImageView) mainView.findViewById(R.id.realtimeSchoolBtn)).setOnClickListener(DestOnClickListener);
         (sendBtn = (ImageView) mainView.findViewById(R.id.realtimeSendBtn)).setOnTouchListener(this);
+
     }
 
     public void initData(int caseNum) {
@@ -111,12 +120,12 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
             return false;
         return true;
     }
-
     /**************************************/
 
      /*Listener*****************************/
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if (isQueuing) return false;
         AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
         if (checkValidation()) {
             String dest = "";
@@ -128,7 +137,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                     .setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
+                            mCallBack.makeDarker(true);
                         }
                     })
                     .setNegativeButton("아뇨", new DialogInterface.OnClickListener() {
@@ -156,6 +165,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     View.OnClickListener DestOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (isQueuing) return;
             boolean get = (boolean) v.getTag();
             switch (v.getId()) {
                 case R.id.realtimeJuanBtn:
@@ -163,7 +173,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         initData(3);
                         juanBtn.setImageResource(R.drawable.realtime_juan_btn_s);
                         juanBtn.setTag(true);
-                        realTimeRommData.destPoint = 1;//????????
+                        realTimeRommData.destPoint = 1;
                         realTimeRommData.startingPoint = 2;
                     }
                     break;
@@ -172,7 +182,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         initData(3);
                         schoolBtn.setImageResource(R.drawable.realtime_school_btn_s);
                         schoolBtn.setTag(true);
-                        realTimeRommData.destPoint = 2;//????????
+                        realTimeRommData.destPoint = 2;
                         realTimeRommData.startingPoint = 1;
                     }
                     break;
@@ -182,6 +192,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     View.OnClickListener withNumOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (isQueuing) return;
             boolean get = (boolean) v.getTag();
             switch (v.getId()) {
                 case R.id.realTimeMatchingWith1:
@@ -192,7 +203,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         v.setTag(true);
                         withNumImages[0].setImageResource(R.drawable.matching_with1_s);
                         realTimeRommData.userNum = 1;
-                        realTimeRommData.maxUser=0;
+                        realTimeRommData.maxUser = 0;
                     }
                     break;
                 case R.id.realTimeMatchingWith2:
@@ -204,7 +215,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         withNumImages[1].setImageResource(R.drawable.matching_with2_s);
                         makeUnableMaxNumImages(1);
                         realTimeRommData.userNum = 2;
-                        realTimeRommData.maxUser=0;
+                        realTimeRommData.maxUser = 0;
                     }
                     break;
                 case R.id.realTimeMatchingWith3:
@@ -216,7 +227,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         withNumImages[2].setImageResource(R.drawable.matching_with3_s);
                         makeUnableMaxNumImages(2);
                         realTimeRommData.userNum = 3;
-                        realTimeRommData.maxUser=0;
+                        realTimeRommData.maxUser = 0;
                     }
                     break;
             }
@@ -225,6 +236,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     View.OnClickListener maxNumOnclickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (isQueuing) return;
             int mode = (int) v.getTag();
             switch (v.getId()) {
                 case R.id.realTimeMax1:
