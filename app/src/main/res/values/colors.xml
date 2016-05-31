@@ -6,4 +6,5 @@
     <color name="colorOrange">#fb9339</color>
     <color name="colorStatusBar">#77361a</color>
     <color name="colorBackground">#dfdfdf</color>
+    <color name="colorReserveText">#888888</color>
 </resources>

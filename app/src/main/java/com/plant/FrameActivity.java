@@ -47,6 +47,7 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
      ******************************************************************************************/
     public void init() {
         mView = (RelativeLayout) findViewById(R.id.mView);
+
         statusbar_home_btn = (ImageView) findViewById(R.id.statusbar_home_btn);
         statusbar_realtime_btn = (ImageView) findViewById(R.id.statusbar_realtime_btn);
         statusbar_conserve_btn = (ImageView) findViewById(R.id.statusbar_conserve_btn);
@@ -133,6 +134,12 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
                 fragment = new ReservationCheckFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentReplace, fragment)
+                        .commit();
+                break;
+            case 4:
+                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationMakeFragment())
                         .commit();
                 break;
         }
