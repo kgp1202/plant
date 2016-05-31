@@ -4,20 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ReservationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ReservationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ReservationFragment extends Fragment {
+
+    View mainView;
+    FragmentChangeListener mCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mCallback=(FragmentChangeListener)context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,19 @@ public class ReservationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reservation, container, false);
+        mainView = inflater.inflate(R.layout.fragment_reservation, container, false);
+        init();
+
+        return mainView;
+    }
+
+    public void init(){
+        Button button = (Button) mainView.findViewById(R.id.makeRoomBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.makeChange(4);
+            }
+        });
     }
 }

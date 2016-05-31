@@ -29,11 +29,6 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
         init();
     }
 
-
-
-
-
-
     /**init method******************************************************************************************/
     public void init(){
         statusbar_home_btn = (ImageView) findViewById(R.id.statusbar_home_btn);
@@ -115,6 +110,12 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
                 statusbar_conserve_confirm_btn.setImageResource(R.drawable.statusbar_conserve_confirm_clicked_btn);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentReplace, new ReservationCheckFragment())
+                        .commit();
+                break;
+            case 4:
+                statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, new ReservationMakeFragment())
                         .commit();
                 break;
         }
