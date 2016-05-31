@@ -4,10 +4,39 @@
     android:layout_height="match_parent"
     tools:context="com.plant.ReservationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#dddddd"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:src="@drawable/reserv_list_search" />
+
+            <ListView
+                android:id="@+id/reservationList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="11">
+
+            </ListView>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/reservationAddBtn"
+            android:src="@drawable/reserv_list_addbtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            />
+    </RelativeLayout>
 </FrameLayout>
