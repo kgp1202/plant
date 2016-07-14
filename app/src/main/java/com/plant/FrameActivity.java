@@ -6,6 +6,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,9 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
     Fragment fragment;
     /************************************************/
 
+    //UserData와 RoomData
+    UserData userData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,9 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
      * init method
      ******************************************************************************************/
     public void init() {
+        //intent를 통해서 넘어온 데이터를 UserData에 넣는다.
+        userData = (UserData) getIntent().getSerializableExtra("UserData");
+
         mView = (RelativeLayout) findViewById(R.id.mView);
 
         statusbar_home_btn = (ImageView) findViewById(R.id.statusbar_home_btn);
@@ -107,6 +114,16 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
                         .commit();
                 break;
             case R.id.statusbar_more_btn:
+                statusbar_more_btn.setImageResource(R.drawable.statusbar_more_clicked_btn);
+
+                Fragment testFragment = new MoreFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("UserData", userData);
+                testFragment.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentReplace, testFragment)
+                        .commit();
                 break;
         }
     }
@@ -138,6 +155,7 @@ public class FrameActivity extends FragmentActivity implements View.OnClickListe
                 break;
             case 4:
                 statusbar_conserve_btn.setImageResource(R.drawable.statusbar_conserve_clicked_btn);
+                fragment = new ReservationMakeFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentReplace, new ReservationMakeFragment())
                         .commit();

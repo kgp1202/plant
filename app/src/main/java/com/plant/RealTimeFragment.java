@@ -116,7 +116,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
     }
 
     public boolean checkValidation() {
-        if (realTimeRommData.destPoint == 0 || realTimeRommData.maxUser == 0 || realTimeRommData.userNum == 0 || realTimeRommData.startingPoint == 0)
+        if (realTimeRommData.destPoint.equals("") || realTimeRommData.maxUser == 0 || realTimeRommData.userNum == 0 || realTimeRommData.startingPoint == 0)
             return false;
         return true;
     }
@@ -129,8 +129,8 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
         if (checkValidation()) {
             String dest = "";
-            if (realTimeRommData.destPoint == 1) dest = "주안으로";
-            else if (realTimeRommData.destPoint == 2) dest = "학교로";
+            dest=realTimeRommData.destPoint;
+            realTimeRommData.roomType=1;
             builder.setTitle("확인!")
                     .setMessage(realTimeRommData.userNum + "명이서 " + realTimeRommData.maxUser + "명과 함께 택시를 타고 " + dest + " 가는 것 맞나요?")
                     .setCancelable(true)
@@ -173,7 +173,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         initData(3);
                         juanBtn.setImageResource(R.drawable.realtime_juan_btn_s);
                         juanBtn.setTag(true);
-                        realTimeRommData.destPoint = 1;
+                        realTimeRommData.destPoint = "주안으로";
                         realTimeRommData.startingPoint = 2;
                     }
                     break;
@@ -182,7 +182,7 @@ public class RealTimeFragment extends Fragment implements View.OnTouchListener {
                         initData(3);
                         schoolBtn.setImageResource(R.drawable.realtime_school_btn_s);
                         schoolBtn.setTag(true);
-                        realTimeRommData.destPoint = 2;
+                        realTimeRommData.destPoint ="후문으로";
                         realTimeRommData.startingPoint = 1;
                     }
                     break;

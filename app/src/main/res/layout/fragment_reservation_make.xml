@@ -26,6 +26,7 @@
             android:background="@drawable/reserve_border">
 
             <EditText
+                android:id="@+id/destination_editText"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
@@ -63,11 +64,54 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginLeft="2px"
-                android:background="@drawable/reserve_date_image"
-                />
+                android:layout_marginTop="2px"
+                android:layout_marginBottom="2px"
+                android:background="@drawable/reserve_date_image"/>
 
+            <TextView
+                android:id="@+id/reservation_make_month_textView"
+                android:paddingRight="20dp"
+                android:gravity="center_vertical|right"
+                android:textSize="20dp"
+                android:text="12"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.7"/>
 
+            <TextView
+                android:text="월"
+                android:textSize="16dp"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/colorReserveText"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/reserve_blank_nonupdown"
+                android:layout_marginBottom="3px"
+                android:layout_marginTop="3px"/>
+
+            <TextView
+                android:id="@+id/reservation_make_day_textView"
+                android:paddingRight="20dp"
+                android:gravity="center_vertical|right"
+                android:textSize="20dp"
+                android:text="12"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.7"/>
+
+            <TextView
+                android:text="일"
+                android:textSize="16dp"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/colorReserveText"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
         </LinearLayout>
 
         <LinearLayout
@@ -88,7 +132,7 @@
                 android:background="@drawable/reserve_time_image"/>
 
             <TextView
-                android:id="@+id/reservation_hour"
+                android:id="@+id/reservation_make_hour_textView"
                 android:paddingRight="20dp"
                 android:gravity="center_vertical|right"
                 android:textSize="20dp"
@@ -114,7 +158,7 @@
                 android:layout_marginTop="3px"/>
 
             <TextView
-                android:id="@+id/reservation_minute"
+                android:id="@+id/reservation_make_minute_textView"
                 android:paddingRight="20dp"
                 android:gravity="center_vertical|right"
                 android:textSize="20dp"
@@ -147,16 +191,19 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent" />
             <ImageView
+                android:id="@+id/oneway_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:background="@drawable/reserve_oneway_clicked_btn" />
 
             <ImageView
+                android:id="@+id/twoway_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:background="@drawable/reserve_twoway_btn"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -184,17 +231,20 @@
             android:layout_weight="2"
             android:orientation="horizontal">
             <ImageView
+                android:id="@+id/goal_btn0"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:background="@drawable/reserve_box2_option1_clicked"/>
             <ImageView
+                android:id="@+id/goal_btn1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:background="@drawable/reserve_box2_option2"/>
             <ImageView
+                android:id="@+id/goal_btn2"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -219,6 +269,7 @@
         android:layout_weight="1"/>
 
     <ImageView
+        android:id="@+id/send_btn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="2"

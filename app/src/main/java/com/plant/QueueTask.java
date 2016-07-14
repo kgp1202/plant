@@ -18,13 +18,18 @@ class QueueTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         while(!isCancelled()){
+            /*Queue를 잡는다**********************/
 
+
+
+            /*************************************/
         }
         return null;
     }
     @Override
     protected void onPostExecute(Void params) {
         super.onPostExecute(params);
+        Log.d("post", "post");
         myTrigger.makeDarker(false);
     }
     @Override

@@ -1,0 +1,32 @@
+2016-07-15
+예약하기와 예약 확인 페이지 구현된거 합치기.
+예약하기 + 버튼 구현.
+
+2016-07-14
+sharedPreferences를 이용해서 로그인 정보 저장 구현(자동로그인)
+로그아웃 버튼 구현.
+
+2016-07-11
+login.php 네이버 구현
+
+2016-07-09, 10(주말)
+login.php 구현
+
+2016-07-08
+naver 로그인 기능 구현
+
+2016-07-07
+JSON 공부하기(http://www.w3schools.com/json/default.asp)
+RoomData, UserData에 맞게 데이터베이스 만들기
+웹호스팅 세팅
+
+Reservation make fragment에서 send버튼 클릭시 어떻게 해야 할지 결정
+Spinner hint 가능하게 하기.
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@협력이 필요한 작업@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+정보를 보내는 방식
+
+roomData에서 시간을 표현하는 방식 => SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd hh mm ss");

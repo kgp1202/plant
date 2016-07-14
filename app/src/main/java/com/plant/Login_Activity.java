@@ -2,16 +2,25 @@ package com.plant;
 
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kakao.auth.ErrorCode;
 import com.kakao.auth.ISessionCallback;
@@ -23,42 +32,151 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
+import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Login_Activity extends Activity implements View.OnClickListener{
     /************* activity *************/
-    ImageView btnTw;
-    ImageView btnFb;
-    userData userData;
+    ImageView btnFB;
+    OAuthLoginButton btnNAV;
+    com.plant.Kakao.KakaoBtnLayout btnKKO;
+
+    UserData userData;
     Animation anim1;
     Animation anim2;
     /************* activity *************/
 
-    com.plant.Kakao.KakaoBtnLayout btnKko;
     private SessionCallback callback;
 
     public void init(){
-        btnTw=(ImageView)findViewById(R.id.btnTW);
-        btnFb=(ImageView)findViewById(R.id.btnFB);
-        btnKko=(com.plant.Kakao.KakaoBtnLayout)findViewById(R.id.btnKKO);
+        //UI를 정의하기 전에 SharedPreference를 이용해서
+        //기존에 UserData가 존재하면 이 정보를 통해서 로그인.
+        SharedPreferences pref = getSharedPreferences("UserData", MODE_PRIVATE);
+        Boolean pasteIsLogin = pref.getBoolean("isLogin", false);
+        Log.d("pastLogin", ""+pasteIsLogin);
+        if(pasteIsLogin){
+            /********* 보안문제 발생 가능************/
+            UserData tempUserData = new UserData();
+            tempUserData.userID = pref.getString("userID", "");
+            tempUserData.loginFrom = pref.getInt("loginFrom", 0);
 
-        btnTw.setOnClickListener(this);
-        btnFb.setOnClickListener(this);
+            LoginPHP loginPHP = new LoginPHP();
+            loginPHP.execute(tempUserData);
+        }
+
+        btnFB=(ImageView)findViewById(R.id.btnFB);
+        btnNAV = (OAuthLoginButton) findViewById(R.id.btnNAV);
+        btnKKO=(com.plant.Kakao.KakaoBtnLayout)findViewById(R.id.btnKKO);
+
+        btnFB.setOnClickListener(this);
+        //btnNAV.setOnClickListener(this);
+        btnKKO.setOnClickListener(this);
 
         anim1= AnimationUtils.loadAnimation(this,R.anim.scale_down);
         anim2 = AnimationUtils.loadAnimation(this,R.anim.scale_up);
     }
+
+    /************* NAVER extend class  and function *************/
+    private static String OAUTH_CLIENT_ID = "59HIuAACdfvIhVWZV2MD";
+    private static String OAUTH_CLIENT_SECRET = "feFvP6XdVx";
+    private static String OAUTH_CLIENT_NAME = "plan T";
+
+    private static OAuthLogin mOAuthLoginInstance;
+    private static Context mContext;
+
+    private void initBtnNAV(){
+        mContext = this;
+
+        mOAuthLoginInstance = OAuthLogin.getInstance();
+        mOAuthLoginInstance.init(mContext, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);
+
+        btnNAV.setBgResourceId(R.color.colorMainOrange);
+        btnNAV.setImageResource(R.drawable.login_nav);
+        btnNAV.setOAuthLoginHandler(mOAuthLoginHandler);
+    }
+
+    private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
+        @Override
+        public void run(boolean success) {
+            if (success) {
+                new RequestApiTask().execute();     //사용자 정보 조회
+
+            } else {
+                Toast.makeText(mContext, mOAuthLoginInstance.getLastErrorCode(mContext) + " "
+                        + mOAuthLoginInstance.getLastErrorDesc(mContext), Toast.LENGTH_SHORT).show();
+            }
+        };
+    };
+
+    //사용자 정보 조회를 통해서 UserData를 세팅한다.
+    private class RequestApiTask extends AsyncTask<Void, Void, UserData> {
+        String naverRequestURL = "https://openapi.naver.com/v1/nid/getUserProfile.xml";
+
+        @Override
+        protected void onPreExecute() { }
+        @Override
+        protected UserData doInBackground(Void... params) {
+            //naverAPI를 통해서 userID와 이름을 검색한다.
+            String at = mOAuthLoginInstance.getAccessToken(mContext);
+
+            String naverRequestResult = mOAuthLoginInstance.requestApi(mContext, at, naverRequestURL);
+            String[] arr = naverRequestResult.split("CDATA");
+
+            //Log.d("before ", naverRequestResult);
+            UserData tempUserData = new UserData();
+            tempUserData.loginFrom = 3; //NAVER
+            for(int i = 0; i < arr.length; i++){
+                if(arr[i].matches(".*</enc_id>.*")){
+                    tempUserData.userID =  arr[i].substring(1, arr[i].indexOf("]"));
+                } else if(arr[i].matches(".*</name>.*")){
+                    tempUserData.name = arr[i].substring(1, arr[i].indexOf("]"));
+                } else if(arr[i].matches(".*</profile_image>.*")){
+                    tempUserData.profilePath = arr[i].substring(1, arr[i].indexOf("]"));
+                }
+            }
+
+            //Log.d("before", tempUserData.getUserDataJSONString());
+            return tempUserData;
+        }
+
+        protected void onPostExecute(UserData tempUserData) {
+            LoginPHP loginPHP = new LoginPHP();
+            loginPHP.execute(tempUserData);
+        }
+    }
+    /************* NAVER extend class  and function END *************/
+
+
     /************* KAKAO extend class  and function *************/
     private class SessionCallback implements ISessionCallback {
         @Override
         public void onSessionOpened() {
+            Log.d("onSessionOpened", " ");
             redirectSignupActivity();  // 세션 연결성공 시 redirectSignupActivity() 호출
         }
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
+            Log.d("onSessionOpenFailed", " ");
             if(exception != null) {
                 Logger.e(exception);
             }
-            setContentView(R.layout.activity_login_); // 세션 연결이 실패했을때
+            //setContentView(R.layout.activity_login_); // 세션 연결이 실패했을때
         }                                              // 로그인화면을 다시 불러옴
     }
     protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
@@ -110,25 +228,19 @@ public class Login_Activity extends Activity implements View.OnClickListener{
                 String kakaoID = String.valueOf(userProfile.getId()); // userProfile에서 ID값을 가져옴
                 String kakaoNickname = userProfile.getNickname();     // Nickname 값을 가져옴
                 Log.d("test","onSuccess Login");
-                userData=new userData();
-                userData.loginFrom= com.plant.userData.KAKAO;
-                userData.name=userProfile.getNickname();
-                userData.profilePath=userProfile.getProfileImagePath();
-                userData.ID=userProfile.getId();
-                Log.d("test",":"+userData.getUserDataJson());
-                redirectMainActivity(userData); // 로그인 성공시 MainActivity로
+
+                UserData tempUserData =new UserData();
+                tempUserData.userID = kakaoID;
+                tempUserData.loginFrom= com.plant.UserData.KAKAO;
+                tempUserData.name=userProfile.getNickname();
+                tempUserData.profilePath=userProfile.getProfileImagePath();
+                redirectMainActivity(tempUserData); // 로그인 성공시 MainActivity로
             }
         });
     }
-    private void redirectMainActivity(userData input) {
-        /**
-         *
-         * 로그인 성공시 여기를 바꿔 줘야됨
-         *
-         * */
-        Intent intent=new Intent(this,FrameActivity.class);
-        startActivity(intent);
-        finish();
+    private void redirectMainActivity(UserData input) {
+        LoginPHP loginPHP = new LoginPHP();
+        loginPHP.execute(input);
     }
     protected void redirectLoginActivity() {
 //        Log.d("test","session close or anything");
@@ -140,12 +252,83 @@ public class Login_Activity extends Activity implements View.OnClickListener{
     /************* KAKAO Class & Function END *************/
 
 
+    /************* Login.php로 연결 ***********************/
+    //입력으로 UserData를 Parameter로 입력받아서 execute를 하면
+    //login.php로 연결하여 결과를 전역변수인 userData에 넣어준다.
+    // 그리고 그 값을 sharedPreference를 통해서
+    private class LoginPHP extends AsyncTask<UserData, Void, String>{
+        private String loginURL = "http://plan-t.kr/login.php";
+
+        @Override
+        protected String doInBackground(UserData... tempUserData) {
+            //tempUserData을 json형식으로 login,php에 접속하여 정보 존재 여부를 확인후 로그인 혹은 정보 생성
+            StringBuilder jsonResult = new StringBuilder();
+            try {
+                URL loginObj = new URL(loginURL);
+                HttpURLConnection conn = (HttpURLConnection) loginObj.openConnection();
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+
+                OutputStream outputStream = conn.getOutputStream();
+                outputStream.write(tempUserData[0].getUserDataJSONString().getBytes());
+                outputStream.flush();
+
+                if ( conn.getResponseCode() == HttpURLConnection.HTTP_OK ) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                    while ( true ) {
+                        String line = br.readLine();
+                        if ( line == null )
+                            break;
+                        jsonResult.append(line + "\n");
+                    }
+                    br.close();
+                }
+                conn.disconnect();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return jsonResult.toString();
+        }
+
+        protected void onPostExecute(String jsonResult) {
+            //Set userData by using jsonResult
+            try {
+                userData = new UserData();
+                userData.setUserDataFromJson(new JSONObject(jsonResult));
+                Log.d("after", userData.getUserDataJSONString());
+
+                //SharedPreference에 userID와 loginFrom저장
+                SharedPreferences pref = getSharedPreferences("UserData", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("isLogin", true);
+                editor.putString("userID", userData.userID);
+                editor.putInt("loginFrom", userData.loginFrom);
+                editor.commit();
+
+                Intent intent=new Intent(mContext,FrameActivity.class);
+                intent.putExtra("UserData", userData);
+                startActivity(intent);
+                finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /************* Login.php로 연결 END ***********************/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_);
         init(); //actvity init
         kakaoInit();//kakao Init;
+        initBtnNAV();//naver init;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,7 +374,7 @@ public class Login_Activity extends Activity implements View.OnClickListener{
                         break;
                     case R.id.btnKKO:
                         break;
-                    case R.id.btnTW:
+                    case R.id.btnNAV:
                         break;
                 }
             }

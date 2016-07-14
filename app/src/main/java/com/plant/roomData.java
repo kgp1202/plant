@@ -12,29 +12,33 @@ import java.util.Calendar;
  * Created by angks on 2016-05-13.
  */
 public class roomData {
-    public int ID;
-    public ArrayList<Integer> userID;
+    public long roomID;
+    public ArrayList<Long> memberUserID;
     public long durationTime;
     public int userNum;
     public int maxUser;
+    public int roomType;
     public int startingPoint;
-    public int destPoint;
+    public int goal;
+    public String destPoint;
     public boolean round;//왕복
     public long roomStartTime;//출발 날짜
     public int roomObject;//목적
     public String content;
     public roomData(){
-        ID=0;
+        roomID=0;
         durationTime=0;
         userNum=0;
         maxUser=0;
         startingPoint=0;
-        destPoint=0;
+        destPoint="";
         round=false;
         roomObject=0;
-        userID=new ArrayList<Integer>();
+        memberUserID=new ArrayList<Long>();
         roomStartTime= Calendar.getInstance().getTimeInMillis();
         content="";
+        goal=0;
+        roomType=0;
     }
     public JSONObject getRoomDataJson(){
         Gson makeJson=new Gson();
@@ -50,8 +54,8 @@ public class roomData {
         Gson makeClasee=new Gson();
         roomData temp=new roomData();
         temp=makeClasee.fromJson(input.toString(),roomData.class);
-        this.ID=temp.ID;
-        this.userID=temp.userID;
+        this.roomID=temp.roomID;
+        this.memberUserID=temp.memberUserID;
         this.durationTime=temp.durationTime;
         this.userNum=temp.userNum;
         this.maxUser=temp.maxUser;

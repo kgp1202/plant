@@ -13,13 +13,13 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
 import com.plant.FrameActivity;
-import com.plant.userData;
+import com.plant.UserData;
 
 /**
  * Created by angks on 2016-05-17.
  */
 public class KakaoSignUp extends Activity {
-    com.plant.userData userData;
+    UserData userData;
     Context myContext;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -57,18 +57,18 @@ public class KakaoSignUp extends Activity {
                 String kakaoID = String.valueOf(userProfile.getId()); // userProfile에서 ID값을 가져옴
                 String kakaoNickname = userProfile.getNickname();     // Nickname 값을 가져옴
                 Log.d("test","onSuccess Login");
-                userData=new userData();
-                userData.loginFrom= com.plant.userData.KAKAO;
+                userData=new UserData();
+                userData.loginFrom= UserData.KAKAO;
                 userData.name=userProfile.getNickname();
                 userData.profilePath=userProfile.getProfileImagePath();
-                userData.ID=userProfile.getId();
+                //userData.userID=userProfile.getId();
                 Log.d("test",":"+userData.getUserDataJson());
                 redirectMainActivity(userData); // 로그인 성공시 MainActivity로
             }
         });
     }
 
-    private void redirectMainActivity(userData input) {
+    private void redirectMainActivity(UserData input) {
         /**
          *
          * 로그인 성공시 여기를 바꿔 줘야됨
